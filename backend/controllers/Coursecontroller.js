@@ -47,4 +47,4 @@ export const getCourseById = async (req, res) => {
   }
 };
 
-module.exports = { getAllCourses, getCourseById, createCourse }
+module.exports = { getAllCourses, getCourseById, createCourse };
