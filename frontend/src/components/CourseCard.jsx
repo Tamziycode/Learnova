@@ -10,7 +10,7 @@ const CourseCard = () => {
       <p>Description:</p>
       <p>Category:</p>
       <p>Instructor:</p>
-      <p>Level:</p>
+      <p>Difficulty:</p>
       <p>Price:</p>
       <p>
         Preview vid.This should be a video tag that shows previews of the video
