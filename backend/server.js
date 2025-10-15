@@ -14,9 +14,15 @@ app.use(express.json());
 app.use(cors())
 
 const authRoutes = require("./routes/Authroutes");
+const courseRoutes = require("./routes/Courseroutes");
+const enrollmentRoutes = require("./routes/Enrollmentroutes");
+const userRoutes = require("./routes/Userroutes");
 
 // Use routes (prefix them with /api/auth)
 app.use("/api/auth", authRoutes);
+app.use("/courses", courseRoutes);
+app.use("/enroll", enrollmentRoutes);
+app.use("/user",userRoutes);
 
-app.listen(PORT, () => console.log(`Server has started on ${PORT}`))
+app.listen(PORT, () => console.log(`Server has started on ${PORT}`));
 
