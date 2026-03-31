@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 
 const ROLES = [
   { value: "student", label: "Student", desc: "I want to learn" },
@@ -23,8 +22,8 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [step, setStep] = useState(1);
+  const [successMsg, setSuccessMsg] = useState("");
 
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -59,12 +58,10 @@ const Signup = () => {
     setIsLoading(true);
     setError("");
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/signup",
-        formData
+      await axios.post("http://localhost:5000/api/auth/signup", formData);
+      setSuccessMsg(
+        `Account created! We sent a verification email to ${formData.email}. Check your inbox and click the link to activate your account.`
       );
-      login(response.data.user, response.data.token);
-      navigate("/Dashboard");
     } catch (err) {
       setError(
         err.response?.data?.message || "Signup failed. Please try again."
@@ -73,6 +70,118 @@ const Signup = () => {
       setIsLoading(false);
     }
   };
+
+  // Success state — show this instead of the form
+  if (successMsg) {
+    return (
+      <div className="auth-page">
+        <div className="auth-visual signup-visual">
+          <div className="auth-visual-content">
+            <div className="auth-brand-mark">L</div>
+            <h2 className="auth-tagline">
+              Start learning.
+              <br />
+              Start growing.
+            </h2>
+          </div>
+        </div>
+
+        <div className="auth-form-side">
+          <div className="auth-form-wrapper">
+            <div
+              style={{
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius)",
+                padding: "2rem",
+                textAlign: "center",
+                boxShadow: "var(--glow)",
+              }}
+            >
+              <div
+                style={{
+                  width: "56px",
+                  height: "56px",
+                  borderRadius: "50%",
+                  background: "var(--green-dim)",
+                  border: "1px solid rgba(52,211,153,0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: "0 auto 1.25rem",
+                  fontSize: "24px",
+                  color: "var(--green)",
+                  fontWeight: "700",
+                }}
+              >
+                ✓
+              </div>
+              <h2
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "700",
+                  marginBottom: "0.75rem",
+                }}
+              >
+                Check your email
+              </h2>
+              <p
+                style={{
+                  color: "var(--text-secondary)",
+                  fontSize: "14px",
+                  lineHeight: "1.7",
+                  marginBottom: "1.5rem",
+                }}
+              >
+                {successMsg}
+              </p>
+              <button
+                className="btn btn-gradient"
+                style={{ width: "100%", padding: "12px" }}
+                onClick={() => navigate("/Signin")}
+              >
+                Go to Sign In
+              </button>
+              <p
+                style={{
+                  color: "var(--text-muted)",
+                  fontSize: "12px",
+                  marginTop: "1rem",
+                }}
+              >
+                Didn&apos;t receive the email?{" "}
+                <button
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "var(--purple)",
+                    cursor: "pointer",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    fontFamily: "inherit",
+                    padding: 0,
+                  }}
+                  onClick={async () => {
+                    try {
+                      await axios.post(
+                        "http://localhost:5000/api/auth/resend-verification",
+                        { email: formData.email }
+                      );
+                      alert("Verification email resent. Check your inbox.");
+                    } catch (err) {
+                      alert(err.response?.data?.message || "Failed to resend.");
+                    }
+                  }}
+                >
+                  Resend it
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-page">
@@ -235,7 +344,7 @@ const Signup = () => {
                     setError("");
                   }}
                 >
-                  ← Back
+                  Back
                 </button>
                 <button
                   type="submit"

@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
+import VerifyEmail from "./pages/VerifyEmail";
 import "./App.css";
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
               {/* Public routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/About" element={<About />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
 
               {/* Auth routes */}
               <Route

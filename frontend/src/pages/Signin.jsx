@@ -14,6 +14,9 @@ const Signin = () => {
   const location = useLocation();
   const from = location.state?.from?.pathname || "/Dashboard";
 
+  const params = new URLSearchParams(window.location.search);
+  const justVerified = params.get("verified") === "true";
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (error) setError("");
@@ -63,6 +66,25 @@ const Signin = () => {
             <p className="auth-label">Welcome back</p>
             <h1 className="auth-title">Sign in</h1>
           </div>
+
+          {/* Email verified success message */}
+          {justVerified && (
+            <div
+              style={{
+                background: "var(--green-dim)",
+                border: "1px solid rgba(52,211,153,0.2)",
+                color: "var(--green)",
+                padding: "12px 14px",
+                borderRadius: "var(--radius-sm)",
+                fontSize: "13px",
+                marginBottom: "1rem",
+                textAlign: "center",
+                fontWeight: "500",
+              }}
+            >
+              Email verified successfully. You can now sign in.
+            </div>
+          )}
 
           {error && (
             <div className="auth-error">

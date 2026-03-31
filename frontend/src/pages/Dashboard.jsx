@@ -318,7 +318,7 @@ const InstructorDashboard = ({ user, token }) => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/courses", {
+      const res = await axios.get("http://localhost:5000/courses/my-courses", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCourses(res.data);
