@@ -100,7 +100,7 @@ const CourseDetail = () => {
     setEnrollMsg("");
     try {
       await axios.post(
-        "${import.meta.env.VITE_API_URL}/enroll",
+        `${import.meta.env.VITE_API_URL}/enroll`,
         { courseId: id },
         { headers: { Authorization: `Bearer ${token}` } },
       );

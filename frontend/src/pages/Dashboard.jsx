@@ -34,7 +34,7 @@ const ProfileEditForm = ({ user, token, onClose }) => {
       };
       if (formData.password) payload.password = formData.password;
 
-      await axios.post("${import.meta.env.VITE_API_URL}/user/", payload, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/user/`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMsg("success");
@@ -192,7 +192,7 @@ const StudentDashboard = ({ user, token }) => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get("${import.meta.env.VITE_API_URL}/enroll", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/enroll`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCourses(res.data);
@@ -319,7 +319,7 @@ const InstructorDashboard = ({ user, token }) => {
   const fetchCourses = async () => {
     try {
       const res = await axios.get(
-        "${import.meta.env.VITE_API_URL}/courses/my-courses",
+        `${import.meta.env.VITE_API_URL}/courses/my-courses`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
@@ -344,7 +344,7 @@ const InstructorDashboard = ({ user, token }) => {
     setSubmitting(true);
     setMsg("");
     try {
-      await axios.post("${import.meta.env.VITE_API_URL}/courses", formData, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/courses`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMsg("success");

@@ -59,7 +59,7 @@ const Signup = () => {
     setError("");
     try {
       await axios.post(
-        "${import.meta.env.VITE_API_URL}/api/auth/signup",
+        `${import.meta.env.VITE_API_URL}/api/auth/signup`,
         formData,
       );
       setSuccessMsg(
@@ -167,7 +167,7 @@ const Signup = () => {
                   onClick={async () => {
                     try {
                       await axios.post(
-                        "${import.meta.env.VITE_API_URL}/api/auth/resend-verification",
+                        `${import.meta.env.VITE_API_URL}/api/auth/resend-verification`,
                         { email: formData.email },
                       );
                       alert("Verification email resent. Check your inbox.");

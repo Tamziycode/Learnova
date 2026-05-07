@@ -1,0 +1,42 @@
+<svg viewBox="0 0 680 680" width="680" height="680" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-vert" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7c6aff"/>
+      <stop offset="100%" stop-color="#2dd4bf"/>
+    </linearGradient>
+    <linearGradient id="grad-horiz" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#7c6aff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="680" height="680" fill="#0d1117" rx="120"/>
+
+  <!-- Red accent — top left corner bracket -->
+  <line x1="120" y1="200" x2="120" y2="120" stroke="#ff2d1f" stroke-width="8" stroke-linecap="round"/>
+  <line x1="120" y1="120" x2="200" y2="120" stroke="#ff2d1f" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Blue accent — bottom right corner bracket -->
+  <line x1="560" y1="480" x2="560" y2="560" stroke="#2d8fff" stroke-width="8" stroke-linecap="round"/>
+  <line x1="560" y1="560" x2="480" y2="560" stroke="#2d8fff" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Red dot accent top right -->
+  <circle cx="530" cy="150" r="10" fill="#ff2d1f" opacity="0.7"/>
+  <!-- Blue dot accent bottom left -->
+  <circle cx="150" cy="530" r="10" fill="#2d8fff" opacity="0.7"/>
+
+  <!-- L vertical bar -->
+  <rect x="190" y="160" width="76" height="360" fill="url(#grad-vert)" rx="8"/>
+  <!-- L horizontal bar -->
+  <rect x="190" y="444" width="310" height="76" fill="url(#grad-horiz)" rx="8"/>
+
+  <!-- Inner depth lines -->
+  <rect x="250" y="220" width="14" height="300" fill="rgba(255,255,255,0.05)" rx="3"/>
+  <rect x="250" y="506" width="250" height="14" fill="rgba(255,255,255,0.05)" rx="3"/>
+
+  <!-- Red thin line accent top of L -->
+  <rect x="190" y="160" width="76" height="4" fill="#ff2d1f" rx="2" opacity="0.8"/>
+  <!-- Blue thin line accent right end of horizontal bar -->
+  <rect x="496" y="444" width="4" height="76" fill="#2d8fff" rx="2" opacity="0.8"/>
+</svg>

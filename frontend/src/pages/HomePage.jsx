@@ -14,7 +14,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("${import.meta.env.VITE_API_URL}/courses", {
+        const res = await axios.get(`${import.meta.env.VITE_API_URL}/courses`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCourses(res.data.slice(0, 6));
