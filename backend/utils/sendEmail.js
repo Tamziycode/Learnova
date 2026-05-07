@@ -1,20 +1,12 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // This forces it to use the secure, reliable port
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendVerificationEmail = async (toEmail, username, token) => {
   const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
 
-  await transporter.sendMail({
-    from: `"Learnova" <${process.env.EMAIL_USER}>`,
+  await resend.emails.send({
+    from: "Learnova <onboarding@resend.dev>",
     to: toEmail,
     subject: "Verify your Learnova account",
     html: `
