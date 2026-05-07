@@ -28,14 +28,14 @@ const Signin = () => {
     setError("");
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/signin",
-        formData
+        "${import.meta.env.VITE_API_URL}/api/auth/signin",
+        formData,
       );
       login(response.data.user, response.data.token);
       navigate(from, { replace: true });
     } catch (err) {
       setError(
-        err.response?.data?.message || "Login failed. Please try again."
+        err.response?.data?.message || "Login failed. Please try again.",
       );
     } finally {
       setIsLoading(false);

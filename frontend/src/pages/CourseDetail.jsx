@@ -79,9 +79,12 @@ const CourseDetail = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/courses/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/courses/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         setCourse(Array.isArray(res.data) ? res.data[0] : res.data);
       } catch (err) {
         setError("Failed to load course.");
@@ -97,9 +100,9 @@ const CourseDetail = () => {
     setEnrollMsg("");
     try {
       await axios.post(
-        "http://localhost:5000/enroll",
+        "${import.meta.env.VITE_API_URL}/enroll",
         { courseId: id },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setEnrollMsg("success");
     } catch (err) {

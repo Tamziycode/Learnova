@@ -23,7 +23,7 @@ const Courses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/courses", {
+        const res = await axios.get("${import.meta.env.VITE_API_URL}/courses", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCourses(res.data);
@@ -41,9 +41,9 @@ const Courses = () => {
     setEnrollMsg("");
     try {
       await axios.post(
-        "http://localhost:5000/enroll",
+        "${import.meta.env.VITE_API_URL}/enroll",
         { courseId },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       );
       setEnrollMsg("Enrolled successfully!");
     } catch (err) {

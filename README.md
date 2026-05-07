@@ -162,7 +162,7 @@ JWT_SECRET=your_jwt_secret
 EMAIL_USER=youremail@gmail.com
 EMAIL_PASS=your_gmail_app_password
 CLIENT_URL=http://localhost:5173
-BACKEND_URL=http://localhost:5000
+BACKEND_URL=${import.meta.env.VITE_API_URL}
 PORT=5000
 ```
 
@@ -220,7 +220,7 @@ npm install
 Create a `.env` file in the frontend directory:
 
 ```
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=${import.meta.env.VITE_API_URL}
 ```
 
 Start the frontend:

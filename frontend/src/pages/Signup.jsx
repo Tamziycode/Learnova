@@ -58,13 +58,16 @@ const Signup = () => {
     setIsLoading(true);
     setError("");
     try {
-      await axios.post("http://localhost:5000/api/auth/signup", formData);
+      await axios.post(
+        "${import.meta.env.VITE_API_URL}/api/auth/signup",
+        formData,
+      );
       setSuccessMsg(
-        `Account created! We sent a verification email to ${formData.email}. Check your inbox and click the link to activate your account.`
+        `Account created! We sent a verification email to ${formData.email}. Check your inbox and click the link to activate your account.`,
       );
     } catch (err) {
       setError(
-        err.response?.data?.message || "Signup failed. Please try again."
+        err.response?.data?.message || "Signup failed. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -164,8 +167,8 @@ const Signup = () => {
                   onClick={async () => {
                     try {
                       await axios.post(
-                        "http://localhost:5000/api/auth/resend-verification",
-                        { email: formData.email }
+                        "${import.meta.env.VITE_API_URL}/api/auth/resend-verification",
+                        { email: formData.email },
                       );
                       alert("Verification email resent. Check your inbox.");
                     } catch (err) {

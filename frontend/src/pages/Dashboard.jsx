@@ -34,7 +34,7 @@ const ProfileEditForm = ({ user, token, onClose }) => {
       };
       if (formData.password) payload.password = formData.password;
 
-      await axios.post("http://localhost:5000/user/", payload, {
+      await axios.post("${import.meta.env.VITE_API_URL}/user/", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMsg("success");
@@ -192,7 +192,7 @@ const StudentDashboard = ({ user, token }) => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/enroll", {
+        const res = await axios.get("${import.meta.env.VITE_API_URL}/enroll", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCourses(res.data);
@@ -318,9 +318,12 @@ const InstructorDashboard = ({ user, token }) => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/courses/my-courses", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "${import.meta.env.VITE_API_URL}/courses/my-courses",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       setCourses(res.data);
     } catch (err) {
       console.error(err);
@@ -341,7 +344,7 @@ const InstructorDashboard = ({ user, token }) => {
     setSubmitting(true);
     setMsg("");
     try {
-      await axios.post("http://localhost:5000/courses", formData, {
+      await axios.post("${import.meta.env.VITE_API_URL}/courses", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMsg("success");
@@ -365,9 +368,12 @@ const InstructorDashboard = ({ user, token }) => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
     setDeleting(courseId);
     try {
-      await axios.delete(`http://localhost:5000/courses/${courseId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/courses/${courseId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       setCourses((prev) => prev.filter((c) => c.id !== courseId));
     } catch (err) {
       alert(err.response?.data?.message || "Delete failed.");
