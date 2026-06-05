@@ -1,12 +1,21 @@
-const { Resend } = require("resend");
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+const nodemailer = require("nodemailer");
 
 const sendVerificationEmail = async (toEmail, username, token) => {
+  // Construct the verification URL using your Render backend link
   const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
 
-  await resend.emails.send({
-    from: "Learnova <onboarding@resend.dev>",
+  // 1. Create the Gmail transporter
+  const transporter = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  // 2. Define the email details and inject your beautiful HTML template
+  const mailOptions = {
+    from: `Learnova <${process.env.EMAIL_USER}>`,
     to: toEmail,
     subject: "Verify your Learnova account",
     html: `
@@ -29,7 +38,10 @@ const sendVerificationEmail = async (toEmail, username, token) => {
         </div>
       </div>
     `,
-  });
+  };
+
+  // 3. Fire the email
+  await transporter.sendMail(mailOptions);
 };
 
 module.exports = { sendVerificationEmail };
