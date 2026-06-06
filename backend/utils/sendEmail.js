@@ -1,9 +1,10 @@
-const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
-const OAuth2 = google.auth.OAuth2;
 
-const createTransporter = async () => {
-  const oauth2Client = new OAuth2(
+const sendVerificationEmail = async (toEmail, username, token) => {
+  const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
+
+  // 1. Initialize the OAuth2 Client
+  const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
     "https://developers.google.com/oauthplayground",
@@ -13,36 +14,21 @@ const createTransporter = async () => {
     refresh_token: process.env.REFRESH_TOKEN,
   });
 
-  const accessToken = await new Promise((resolve, reject) => {
-    oauth2Client.getAccessToken((err, token) => {
-      if (err) {
-        reject("Failed to create access token: " + err);
-      }
-      resolve(token);
-    });
-  });
+  // 2. Initialize the Gmail HTTP API
+  const gmail = google.gmail({ version: "v1", auth: oauth2Client });
 
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: process.env.EMAIL_USER,
-      accessToken,
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
-    },
-  });
-};
+  // 3. Construct the raw email string (RFC 2822 format)
+  const subject = "Verify your Learnova account";
+  const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString("base64")}?=`;
 
-const sendVerificationEmail = async (toEmail, username, token) => {
-  const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
-
-  const mailOptions = {
-    from: `Learnova <${process.env.EMAIL_USER}>`,
-    to: toEmail,
-    subject: "Verify your Learnova account",
-    html: `
+  const messageParts = [
+    `From: Learnova <${process.env.EMAIL_USER}>`,
+    `To: ${toEmail}`,
+    `Subject: ${utf8Subject}`,
+    "MIME-Version: 1.0",
+    "Content-Type: text/html; charset=utf-8",
+    "",
+    `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 560px; margin: 0 auto; background: #0d1117; color: #e6edf3; border-radius: 12px; overflow: hidden;">
         <div style="background: linear-gradient(135deg, #7c6aff, #2dd4bf); padding: 32px; text-align: center;">
           <h1 style="margin: 0; font-size: 28px; color: white; letter-spacing: -0.5px;">Learnova</h1>
@@ -59,10 +45,24 @@ const sendVerificationEmail = async (toEmail, username, token) => {
         </div>
       </div>
     `,
-  };
+  ];
 
-  const transporter = await createTransporter();
-  await transporter.sendMail(mailOptions);
+  const message = messageParts.join("\n");
+
+  // 4. Google's API requires the payload to be Base64url encoded
+  const encodedMessage = Buffer.from(message)
+    .toString("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+
+  // 5. Send via standard HTTP POST request (Bypasses Render SMTP Block)
+  await gmail.users.messages.send({
+    userId: "me",
+    requestBody: {
+      raw: encodedMessage,
+    },
+  });
 };
 
 module.exports = { sendVerificationEmail };
