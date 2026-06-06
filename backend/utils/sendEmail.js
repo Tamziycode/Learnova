@@ -1,19 +1,43 @@
 const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
 
-const sendVerificationEmail = async (toEmail, username, token) => {
-  // Construct the verification URL using your Render backend link
-  const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
+const createTransporter = async () => {
+  const oauth2Client = new OAuth2(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    "https://developers.google.com/oauthplayground",
+  );
 
-  // 1. Create the Gmail transporter
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
+  oauth2Client.setCredentials({
+    refresh_token: process.env.REFRESH_TOKEN,
   });
 
-  // 2. Define the email details and inject your beautiful HTML template
+  const accessToken = await new Promise((resolve, reject) => {
+    oauth2Client.getAccessToken((err, token) => {
+      if (err) {
+        reject("Failed to create access token: " + err);
+      }
+      resolve(token);
+    });
+  });
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.EMAIL_USER,
+      accessToken,
+      clientId: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+    },
+  });
+};
+
+const sendVerificationEmail = async (toEmail, username, token) => {
+  const verifyUrl = `${process.env.BACKEND_URL}/api/auth/verify-email?token=${token}`;
+
   const mailOptions = {
     from: `Learnova <${process.env.EMAIL_USER}>`,
     to: toEmail,
@@ -32,15 +56,12 @@ const sendVerificationEmail = async (toEmail, username, token) => {
           <a href="${verifyUrl}" style="display: inline-block; background: linear-gradient(135deg, #7c6aff, #2dd4bf); color: white; text-decoration: none; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 15px;">
             Verify Email Address
           </a>
-          <p style="color: #484f58; font-size: 12px; margin: 24px 0 0; line-height: 1.6;">
-            This link expires in 24 hours. If you did not create an account, you can safely ignore this email.
-          </p>
         </div>
       </div>
     `,
   };
 
-  // 3. Fire the email
+  const transporter = await createTransporter();
   await transporter.sendMail(mailOptions);
 };
 
